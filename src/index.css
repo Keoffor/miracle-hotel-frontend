@@ -44,7 +44,7 @@ label.label-text{
   left: 0;
   right: 0;
   content: '';
-  background-color:rgb(169, 77, 123) ;
+  background-color:#182A3C ;
   width: 0;
   margin: 0 auto;
   height: 4px;
@@ -75,11 +75,11 @@ label.label-text{
 
   /* Hotel custom color */
  .btn-hotel{
-  background-color: rgb(169, 77, 123) !important;
+  background-color: #182A3C !important;
   color: #ffffff !important;
   }
   .btn-hotel:hover{
-  background-color: rgb(137, 127, 132)!important;
+  background-color: #394756!important;
   color: #fff!important;
   transition: 0.7s!important;
   outline-color: transparent!important;
@@ -92,7 +92,7 @@ label.label-text{
 
 
  .hotel-color{
-    color: rgb(169, 77, 123) !important;
+    color: #182A3C !important;
   }
   .room-price{
     color:darkgoldenrod;
@@ -107,7 +107,7 @@ label.label-text{
 
 
 .parallax {
-  background-image: url("./assets/images/interior-foto.jpg");
+  background-image: url("/images/interior-foto.jpg");
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -119,7 +119,7 @@ label.label-text{
   position: relative;
   height: 150px;
   background-size: cover;
-  background-image: url("./assets/images/welcome-success.jpeg");
+  background-image: url("/images/welcome-success.jpeg");
   background-position: center center;
 }
 .header-title {
@@ -214,7 +214,7 @@ label.label-text{
 
 /* The header banner */
 .header-banner {
-  background-image:  url("./assets/images/miracle-front-view.jpg");
+  background-image:  url("/images/miracle-front-view.jpg");
    background-size: cover;
   background-position: center;
    position: relative;

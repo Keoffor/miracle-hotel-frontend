@@ -15,13 +15,15 @@ export const getHeader = () =>{
 /* this function add new room type to the database */
 export async function addRoom(photo, roomType, roomPrice) {
   const formData = new FormData();
-
+  const token = localStorage.getItem("token")
   formData.append("photo", photo);
   formData.append("roomType", roomType);
   formData.append("roomPrice", roomPrice);
   try {
     const response = await api.post("/rooms/add/new-room", formData,{
-      headers : getHeader()
+      headers : {
+        Authorization : `Bearer ${token}`
+      }
     });
     if (response.status === 201) {
       return true;
