@@ -22,7 +22,7 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
 
   useEffect(() => {
     if (isBookingConfirmed) {
-      navigate("/booking-success")
+      navigate("/checkout")
     }
   }, [isBookingConfirmed, navigate]);
   return (
@@ -70,7 +70,7 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
                      Booking confirmed, redirecting to payment ....
                 </>
               ) : (
-                "Confirm booking and proceed to payment"
+                "Confirm booking and Go to Checkout"
               )}
             </Button>
           ) : isBookingConfirmed ? (

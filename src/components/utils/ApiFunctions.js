@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://localhost:9192",
+  baseURL: "http://localhost:9192"
 });
 
 export const getHeader = () =>{
@@ -15,12 +15,16 @@ export const getHeader = () =>{
 /* this function add new room type to the database */
 export async function addRoom(photo, roomType, roomPrice) {
   const formData = new FormData();
-
+  const token = localStorage.getItem("token")
   formData.append("photo", photo);
   formData.append("roomType", roomType);
   formData.append("roomPrice", roomPrice);
   try {
-    const response = await api.post("/rooms/add/new-room", formData);
+    const response = await api.post("/rooms/add/new-room", formData,{
+      headers : {
+        Authorization : `Bearer ${token}`
+      }
+    });
     if (response.status === 201) {
       return true;
     } else {
@@ -54,7 +58,9 @@ export async function getAllRooms() {
 /* this function delete room by ID*/
 export async function deleteRoom(roomId) {
   try {
-    const response = await api.delete(`/rooms/delete/room/${roomId}`);
+    const response = await api.delete(`/rooms/delete/room/${roomId}`,{
+      headers : getHeader()
+    });
     return response.data;
   } catch (error) {
     throw new Error(`Error occurred deleting room ${error.message}`);
@@ -68,13 +74,17 @@ export async function updateRoom(roomId, roomData) {
   formData.append("roomType", roomData.roomType);
   formData.append("roomPrice", roomData.roomPrice);
 
-  const response = await api.put(`/rooms/update/${roomId}`, formData);
+  const response = await api.put(`/rooms/update/${roomId}`, formData,{
+    headers : getHeader()
+  });
   return response;
 }
 /** This function find room by RoomId */
 export async function getRoomById(roomId) {
   try {
-    const response = await api.get(`/rooms/room/${roomId}`);
+    const response = await api.get(`/rooms/room/${roomId}`,{
+      headers : getHeader()
+    });
     return response.data;
   } catch (error) {
     throw new Error(`Error occurred fetching room ${error.message}`);
@@ -83,7 +93,9 @@ export async function getRoomById(roomId) {
 /** This function saves a new booking into the database */
 export async function bookRoom(roomId, booking) {
   try {
-    const response = await api.post(`/bookings/room/${roomId}/booking`, booking);
+    const response = await api.post(`/bookings/room/${roomId}/booking`, booking,{
+      headers : getHeader()
+    });
     return response.data;
   } catch (error) {
     if (error.message && error.response.data) {

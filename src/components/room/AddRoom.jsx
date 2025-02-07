@@ -73,7 +73,7 @@ const AddRoom = () => {
                 )}
 
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="mb-3">
                         <label htmlFor="roomType" className="form-label"> 
                         RoomType
