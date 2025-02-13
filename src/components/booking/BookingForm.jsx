@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { bookRoom, getRoomById } from "../utils/ApiFunctions";
+import { getRoomById, bookRoom  } from "../utils/ApiFunctions";
 import { useNavigate, useParams } from "react-router-dom";
 import {Form, FormControl, FormLabel} from 'react-bootstrap';
 import moment from "moment";
@@ -9,8 +9,12 @@ const BookingForm = () => {
   const [isValidated, setIsValidated] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [errorMsg, setErrorMsg] = useState("")
   const [roomPrice, setRoomPrice] = useState(0);
+  const [roomType, setRoomType] = useState("");
   const currentUser = localStorage.getItem("userId")
+
+
   const [booking, setBooking] = useState({
     guestFullName: "",
     guestEmail: currentUser,
@@ -20,12 +24,16 @@ const BookingForm = () => {
     numOfChildren: "",
   });
 
+
+
   const { roomId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     getRoomPriceById(roomId);
   }, [roomId]);
+  
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,6 +45,7 @@ const BookingForm = () => {
     try {
       const response = await getRoomById(roomId);
       setRoomPrice(response.roomPrice);
+      setRoomType(response.roomType);
     } catch (error) {
       throw new Error(error);
     }
@@ -85,14 +94,24 @@ const BookingForm = () => {
     setIsValidated(true);
   };
 
-  const handleBooking = async () => {
+  
+  const handleBookingSuccess = async () => {
     try {
       const confirmationCode = await bookRoom(roomId, booking);
-      setIsSubmitted(true);
-      navigate("/booking-success", { state: { message: confirmationCode} });
+      
+      if (confirmationCode) {
+        localStorage.setItem("confirmationCode", confirmationCode);
+        setErrorMsg("");
+      } else {
+        localStorage.removeItem("confirmationCode");
+      }
     } catch (error) {
-      const errorMessage = error.message 
-      navigate("/booking-success", { state: { error: errorMessage } });
+      // Extract and store error message from backend
+      if (error.message) {
+        setErrorMsg(error.message); 
+      } else {
+        setErrorMsg("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -214,22 +233,26 @@ const BookingForm = () => {
                     </div>
                 </fieldset>
                 <div className="form-group mb-2">
-                      <button className="btn btn-hotel" type="submit">Continue</button>
+                      <button className="btn btn-hotel" type="submit" onClick={handleBookingSuccess}>Continue</button>
                 </div>
               </Form>
 
             </div>
           </div>
-
+          {errorMsg ? (<strong className="text-danger">{errorMsg}</strong>) :
           <div className="col-md-6">
-            {isSubmitted && (
-              <BookingSummary 
-              booking={booking} 
-              payment={calculatePayment()} 
-              isFormValid={isValidated} 
-              onConfirm={handleBooking}/>
-            )}
-          </div>
+          {isSubmitted && (
+            <BookingSummary 
+            booking={booking} 
+            payment={calculatePayment()} 
+            isFormValid={isValidated}
+            roomType ={roomType} 
+            roomId={roomId}/>
+          )}
+        </div>
+          }
+
+          
         </div>
         </div>
     </>

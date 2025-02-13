@@ -8,6 +8,11 @@ body {
 .summary-text{
   text-align: left !important;
 }
+.total-text{
+  text-align: left !important;
+  font-size: 1.2rem; /* Adjust size as needed */
+  font-weight: bold;
+}
 .custom-room-selector {
   margin-left: 10px; /* Adjust as needed */
 }

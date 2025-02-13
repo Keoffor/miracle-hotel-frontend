@@ -1,30 +1,57 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import { createInitialOrderRequest } from "../utils/interface/OrderRequestInterface";
 
-const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
+const BookingSummary = ({ booking, payment, isFormValid,roomId,roomType }) => {
   const checkInDate = moment(booking.checkInDate);
   const checkOutDate = moment(booking.checkOutDate);
   const noOfDays = checkOutDate.diff(checkInDate, "days");
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const navigate = useNavigate();
+ 
+  const[orderRequest, setOrderRequest] = useState(createInitialOrderRequest())
+    
+    useEffect(() => {
+    }, [orderRequest]);
 
-  const handleConfirmBooking = () => {
+    
+
+  const handleConfirmCheckOut = () => {
     setIsProcessingPayment(true);
     setTimeout(() => {
       setIsProcessingPayment(false);
       setIsBookingConfirmed(true);
-      onConfirm();
+      handleCheckOut()
     }, 3000);
   };
 
-  useEffect(() => {
-    if (isBookingConfirmed) {
-      navigate("/checkout")
-    }
-  }, [isBookingConfirmed, navigate]);
+
+  const handleCheckOut = async () => {
+    setOrderRequest(prevState => {
+      const updatedOrder = {
+        ...prevState,
+        guestFullName: booking.guestFullName,
+        guestEmail: booking.guestEmail,
+        bookedRooms: [{
+          roomId: roomId,
+          roomType: roomType,
+          roomPrice: payment,
+          noOfDays: noOfDays,
+          currency: "USD"
+        }]
+      };
+
+    setTimeout(() => {
+      navigate("/checkout", { state: { orderRequestData: updatedOrder, isclickedData: true } });
+    }, 100);  // Small delay for React state update
+    
+    return updatedOrder;
+  });        
+  };
+
   return (
     <div className="card card-body mt-5 justify-content-center">
       <h4>Reservation Summary</h4><br/><b/>
@@ -59,7 +86,7 @@ const BookingSummary = ({ booking, payment, isFormValid, onConfirm }) => {
             Total Payment : <strong>${payment}</strong>
           </p>
           {isFormValid && !isBookingConfirmed ? (
-            <Button variant="success" onClick={handleConfirmBooking}>
+            <Button variant="success" onClick={handleConfirmCheckOut}>
               {isProcessingPayment ? (
                 <>
                   <span

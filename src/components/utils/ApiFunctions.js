@@ -4,6 +4,14 @@ export const api = axios.create({
   baseURL: "http://localhost:9192"
 });
 
+
+export const api2 = axios.create({
+  baseURL: "http://localhost:9193",
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
+
 export const getHeader = () =>{
   const token = localStorage.getItem("token")
   return {
@@ -119,7 +127,9 @@ export async function getAllBookings() {
 /** This function gets booking by the confirmation code */
 export async function getBookingByConfirmationCode(confirmationCode) {
   try {
-    const response = await api.get(`/bookings/confirmation/${confirmationCode}`);
+    const response = await api.get(`/bookings/confirmation/${confirmationCode}`,{
+      headers : getHeader()
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
@@ -207,4 +217,14 @@ export async function getBookedRoomByEmail(email) {
     return error.response.message
   }
   
+}
+// session for Customer Billing apis 
+
+export async function paymentCheckout(paymentRequest) {
+  try{
+    const response = await api2.post("/payment/checkout",paymentRequest)
+    return response.data
+  }catch(error){
+    return new Error(`Error creating billing session ${error.message}`)
+  }
 }
