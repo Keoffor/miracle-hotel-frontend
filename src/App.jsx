@@ -20,10 +20,13 @@ import Profile from "./components/auth/Profile";
 import Logout from "./components/auth/Logout";
 import AuthProvider from "./components/auth/AuthProvider";
 import RequireAuth from "./components/auth/RequireAuth";
+import CheckoutBookedRoom from "./components/checkout/CheckoutBookedRoom";
+import { CheckoutProvider } from "./components/checkout/CheckoutProvider";
 
 function App() {
   return (
     <AuthProvider>
+    <CheckoutProvider>
       <Router>
         <NavBar />
         <Routes>
@@ -83,9 +86,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/checkout" element={<CheckoutBookedRoom />} />
         </Routes>
         <Footer />
       </Router>
+      </CheckoutProvider>
     </AuthProvider>
   );
 }

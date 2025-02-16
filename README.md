@@ -20,6 +20,7 @@ Also, the system is fully secured with Spring Security, RBAC (Role Based Authent
 - Spring Boot `v3.3.6`
 - MySql
 - JWT Authentication
+- Stripe API
 - JavaScript
 - Nginx server
 - HTML
