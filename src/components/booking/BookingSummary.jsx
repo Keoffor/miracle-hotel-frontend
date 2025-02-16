@@ -38,7 +38,7 @@ const BookingSummary = ({ booking, payment, isFormValid,roomId,roomType }) => {
         bookedRooms: [{
           roomId: roomId,
           roomType: roomType,
-          roomPrice: payment,
+          amount: payment,
           noOfDays: noOfDays,
           currency: "USD"
         }]

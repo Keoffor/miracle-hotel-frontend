@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import OrderSummary from "./OrderSummary";
 import { useLocation } from "react-router-dom";
 import { paymentCheckout } from "../utils/ApiFunctions";
@@ -14,6 +14,7 @@ const CheckoutBookedRoom = () => {
   const[orderCheckoutRequest, setOrderCheckoutRequest] = useState(orderLocation)
   const[isSubmitted, setIsSubmitted] = useState(false);
   const[isClicked, setIsClicked]= useState(false);
+
   const [error, setError]= useState("");
 
   const handleInput = (e) => {
@@ -36,39 +37,36 @@ const CheckoutBookedRoom = () => {
   //     bookedRooms: updatedRooms
   //   }));
   // };
-  const handleSubmit = (e) =>{
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    if (
-      form.checkValidity() === false ||
-      !isClicked
-    ) {
-      e.stopPropagation();
-    } else {
-      setIsSubmitted(true);
-      setIsClicked(true);
-     
-  
-      
-    }
-  }
 
-  const processPayment = async () => {
-          await paymentCheckout(orderCheckoutRequest).then((res) =>{
-          try {
-            if (res.status === "SUCCESS") {
-              window.location.href=res.stripeUrl;
-            setError("");
-          } else {
-            setError(errorMsg);
-          }
-        }
-          catch (error) {
-            setError("An error occurred while processing payment.");
-          }
-        } 
-      )
+    if (form.checkValidity() === false) {
+        e.stopPropagation();
+    } else {
+        setIsSubmitted(true);
+        await processPayment();
     }
+};
+
+const processPayment = async () => {
+  setIsClicked(true);
+  sessionStorage.setItem("paymentDTo",JSON.stringify(orderCheckoutRequest) );
+  await paymentCheckout(orderCheckoutRequest).then((res) => {
+      try {
+          if (res.status === "INITIATE_PAYMENT") {
+              window.location.href = res.stripeUrl;
+              setError("");
+          } else {
+              setError(errorMsg);
+          }
+      } catch (error) {
+          setError("An error occurred while processing payment.");
+      }
+  });
+};
+
 
   return (
     <>
@@ -131,7 +129,7 @@ const CheckoutBookedRoom = () => {
                     </div>
                     <div className="col-6">
                    
-                      <p  className="total-text mt-3" ><strong>Total Payment: </strong>${room?.roomPrice||""}
+                      <p  className="total-text mt-3" ><strong>Total Payment: </strong>${room?.amount||""}
                     </p>
                     </div>
                     </React.Fragment>
@@ -218,9 +216,8 @@ const CheckoutBookedRoom = () => {
                   <hr className="my-4" />
 
                   <button
-                    className="w-100 btn btn-lg btn btn-hotel"
+                    className="w-100 btn btn-lg btn btn-success"
                     type="submit"
-                    onClick={ processPayment}
                   >
                     Continue to checkout
                   </button>

@@ -5,7 +5,7 @@ export const createInitialOrderRequest = () => ({
     bookedRooms: [{
       roomId: null,
       roomType: "",
-      roomPrice: null,
+      amount: null,
       noOfDays: 0,
       currency: ""
     }],
