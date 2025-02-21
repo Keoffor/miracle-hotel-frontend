@@ -1,37 +1,36 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://localhost:9192"
+  baseURL: "http://localhost:9192",
 });
-
 
 export const api2 = axios.create({
   baseURL: "http://localhost:9193",
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
-export const getHeader = () =>{
-  const token = localStorage.getItem("token")
+export const getHeader = () => {
+  const token = localStorage.getItem("token");
   return {
-    Authorization : `Bearer ${token}`,
-    "Content-Type" : "application/json"
-  }
-}
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+};
 
 /* this function add new room type to the database */
 export async function addRoom(photo, roomType, roomPrice) {
   const formData = new FormData();
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   formData.append("photo", photo);
   formData.append("roomType", roomType);
   formData.append("roomPrice", roomPrice);
   try {
-    const response = await api.post("/rooms/add/new-room", formData,{
-      headers : {
-        Authorization : `Bearer ${token}`
-      }
+    const response = await api.post("/rooms/add/new-room", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (response.status === 201) {
       return true;
@@ -66,8 +65,8 @@ export async function getAllRooms() {
 /* this function delete room by ID*/
 export async function deleteRoom(roomId) {
   try {
-    const response = await api.delete(`/rooms/delete/room/${roomId}`,{
-      headers : getHeader()
+    const response = await api.delete(`/rooms/delete/room/${roomId}`, {
+      headers: getHeader(),
     });
     return response.data;
   } catch (error) {
@@ -82,16 +81,16 @@ export async function updateRoom(roomId, roomData) {
   formData.append("roomType", roomData.roomType);
   formData.append("roomPrice", roomData.roomPrice);
 
-  const response = await api.put(`/rooms/update/${roomId}`, formData,{
-    headers : getHeader()
+  const response = await api.put(`/rooms/update/${roomId}`, formData, {
+    headers: getHeader(),
   });
   return response;
 }
 /** This function find room by RoomId */
 export async function getRoomById(roomId) {
   try {
-    const response = await api.get(`/rooms/room/${roomId}`,{
-      headers : getHeader()
+    const response = await api.get(`/rooms/room/${roomId}`, {
+      headers: getHeader(),
     });
     return response.data;
   } catch (error) {
@@ -101,9 +100,13 @@ export async function getRoomById(roomId) {
 /** This function saves a new booking into the database */
 export async function bookRoom(roomId, booking) {
   try {
-    const response = await api.post(`/bookings/room/${roomId}/booking`, booking,{
-      headers : getHeader()
-    });
+    const response = await api.post(
+      `/bookings/room/${roomId}/booking`,
+      booking,
+      {
+        headers: getHeader(),
+      }
+    );
     return response.data;
   } catch (error) {
     if (error.message && error.response.data) {
@@ -117,7 +120,7 @@ export async function bookRoom(roomId, booking) {
 export async function getAllBookings() {
   try {
     const response = await api.get("/bookings/all-bookings", {
-      headers : getHeader()
+      headers: getHeader(),
     });
     return response.data;
   } catch (error) {
@@ -127,38 +130,40 @@ export async function getAllBookings() {
 /** This function gets booking by the confirmation code */
 export async function getBookingByConfirmationCode(confirmationCode) {
   try {
-    const response = await api.get(`/bookings/confirmation/${confirmationCode}`,{
-      headers : getHeader()
-    });
+    const response = await api.get(
+      `/bookings/confirmation/${confirmationCode}`,
+      {
+        headers: getHeader(),
+      }
+    );
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
-    
   }
 }
 
 /** This function deletes booking from the database */
 export async function cancelBooking(bookingId) {
-    try {
-        const response = await api.delete(`/bookings/booking/${bookingId}/delete`)
-        return response.data
-    } catch (error) {
-        throw new Error(`Error cancelling booking: ${error.message}`)
-    }
-
+  try {
+    const response = await api.delete(`/bookings/booking/${bookingId}/delete`,{
+      headers: getHeader()
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error cancelling booking: ${error.message}`);
+  }
 }
 /** This function gets all available rooms from the database within a given date and a room type */
-export async function getAvailableRooms(checkInDate, checkOutDate, roomType){
-  const queryUrl = `rooms/available-rooms?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&roomType=${roomType}`
-  const result = await api.get(queryUrl)
-  return result.data
+export async function getAvailableRooms(checkInDate, checkOutDate, roomType) {
+  const queryUrl = `rooms/available-rooms?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&roomType=${roomType}`;
+  const result = await api.get(queryUrl);
+  return result.data;
 }
 
-export async function registerUser(userData){
+export async function registerUser(userData) {
   try {
-    const response = await api.post("/auth/register-user",userData)
-    return response.data
-    
+    const response = await api.post("/auth/register-user", userData);
+    return response.data;
   } catch (error) {
     if (error.message && error.response.data) {
       throw new Error(error.response.data);
@@ -168,63 +173,86 @@ export async function registerUser(userData){
   }
 }
 
-export async function loginUser(userData){
+export async function loginUser(userData) {
   try {
-    const response = await api.post("/auth/login", userData)
+    const response = await api.post("/auth/login", userData);
     if (response.status >= 200 && response.status < 300) {
-     return response.data
-  } else{
-    return null
-  }
-}catch (error) {
-    console.error(error)
-    return null
+      return response.data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }
 
-export async function getUserProfile(userId){
+export async function getUserProfile(userId) {
   try {
     const response = await api.get(`/users/profile/${userId}`, {
-      headers : getHeader()
-    })
-    return response.data
-    
+      headers: getHeader(),
+    });
+    return response.data;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
 
-export async function deleteUser(userId){
+export async function deleteUser(userId) {
   try {
-    const response = await api.delete(`/users/delete/${userId}`,{
-      headers : getHeader()
-    })
-    return response.data
-
+    const response = await api.delete(`/users/delete/${userId}`, {
+      headers: getHeader(),
+    });
+    return response.data;
   } catch (error) {
-    return error.message
+    return error.message;
   }
 }
 
 export async function getBookedRoomByEmail(email) {
   try {
     const response = await api.get(`/bookings/${email}/booking`, {
-      headers : getHeader()
-    })
-    
-    return response.data
-  }catch(error){
-    return error.response.message
-  }
-  
-}
-// session for Customer Billing apis 
+      headers: getHeader(),
+    });
 
-export async function paymentCheckout(paymentRequest) {
-  try{
-    const response = await api2.post("/payment/checkout",paymentRequest)
-    return response.data
-  }catch(error){
-    return new Error(`Error creating billing session ${error.message}`)
+    return response.data;
+  } catch (error) {
+    return error.response.message;
   }
 }
+
+//This function retrieves all checkout bookings of customer placed in the cart.
+export async function findBookingRoomsByEmailAndCustomerId(email, customerId) {
+  try {
+    const encodedEmail = encodeURIComponent(email);
+    const encodedCustomerId = encodeURIComponent(customerId);
+    const response = await api.get(
+      `/booking/customer-bookings?email=${email}&customerId=${customerId}`,
+        {headers: getHeader(),}
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+  } catch (error) {
+    throw new Error(
+      `Error fetching customer booking payment history: ${error.message}`
+    );
+  }
+}
+
+// ::::::::session for Customer Billing apis ::::::::::::::::::://
+
+//This function allows customer to checkout for billing after booking a room
+export async function paymentCheckout(paymentRequest) {
+  try {
+    const response = await api2.post("/payment/checkout", paymentRequest);
+    return response.data;
+  } catch (error) {
+    return new Error(`Error creating billing session ${error.message}`);
+  }
+}
+
+

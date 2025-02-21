@@ -2,10 +2,11 @@
 export const createInitialOrderRequest = () => ({
     guestFullName: "",
     guestEmail: "",
+    customerId:"",
     bookedRooms: [{
       roomId: null,
       roomType: "",
-      amount: null,
+      amount: 0,
       noOfDays: 0,
       currency: ""
     }],

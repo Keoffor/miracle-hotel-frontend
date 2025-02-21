@@ -20,7 +20,7 @@ Also, the system is fully secured with Spring Security, RBAC (Role Based Authent
 - Spring Boot `v3.3.6`
 - MySql
 - JWT Authentication
-- Stripe API
+- Stripe API and Webhook
 - JavaScript
 - Nginx server
 - HTML
@@ -35,6 +35,7 @@ Also, the system is fully secured with Spring Security, RBAC (Role Based Authent
 ## Components
 ### HomepageComponent
 This is the landing page of the system where guest can view/check room availability
+![homepage](readme-pics/front.png)
 ![homepage](readme-pics/miracle-hotel.png)
 Guest needs to login before making reservation
 
@@ -49,6 +50,7 @@ Guests can create account, login and personalize their Profile. Real time inform
 ### Booking RoomComponent
 This is where guest can make reservations for rooms and checkout their orders for billing.    
 ![homepage](readme-pics/miracle-hotel-3.png)
+![homepage](readme-pics/cart.png)
 
 ## Getting Started
 ### Local environment set-up

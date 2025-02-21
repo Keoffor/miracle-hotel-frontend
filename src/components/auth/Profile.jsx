@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   getBookedRoomByEmail,
   getUserProfile,
@@ -6,8 +6,10 @@ import {
 } from "../utils/ApiFunctions";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { AuthContext } from "../contextProviders/AuthProvider";
 
 const Profile = () => {
+  const auth = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [message, setMessage] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
@@ -30,7 +32,6 @@ const Profile = () => {
     roles: [{}],
   });
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -72,11 +73,7 @@ const Profile = () => {
     await deleteUser(userId)
       .then((response) => {
         setMessage(response.data);
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
-        localStorage.removeItem("userRole");
-        localStorage.removeItem("firstName");
-
+        auth.handleLogout();
         navigate("/");
         window.location.reload();
       })
@@ -216,17 +213,6 @@ const Profile = () => {
               ) : (
                 <p className="mt-3 mb-3">You have not made booking yet</p>
               )}
-
-              {/* <div className="d-flex justify-content-center">
-                <div className="mx-2">
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={handleDeleteAccount}
-                  >
-                    Close Account
-                  </button>
-                </div>
-              </div> */}
 
               <button
                 className="btn btn-danger"

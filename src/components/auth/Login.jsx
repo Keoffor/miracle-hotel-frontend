@@ -1,16 +1,18 @@
-import React, { useContext, useState } from "react";
-import { loginUser } from "../utils/ApiFunctions";
+import React, { useContext, useState, useEffect } from "react";
+import { loginUser,findBookingRoomsByEmailAndCustomerId } from "../utils/ApiFunctions";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthProvider";
-
+import { AuthContext } from "../contextProviders/AuthProvider";
+import {CartContext} from "../contextProviders/CartProvider";
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
+    const[email, setEmail] = useState("");
   const [login, setLogin] = useState({
     email: "",
     password: "",
   });
 
   const { handleLogin } = useContext(AuthContext);
+  const {updateCart,updateCustomerId, customerId} = useContext(CartContext);
 
   const navigate = useNavigate();
 
@@ -18,21 +20,52 @@ const Login = () => {
     setLogin({ ...login, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+ 
+  useEffect(() => {
+    if (email && customerId) {
+        console.log("Triggering API with:", email, customerId);
+        handleCustomerChart(email, customerId);
+    }
+}, [email, customerId]);
+
+useEffect(() => {},[customerId])
+
+const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await loginUser(login);
+
     if (success) {
-      const token = success.token;
-      handleLogin(token);
-      navigate("/");
-    //   window.location.reload();
+        updateCustomerId(`${success.id}`);
+        setEmail(success.email);
+        handleLogin(success.token);
+        localStorage.setItem("customerId", success.id.toString());
+        navigate("/");
+
+        // Delay execution of handleCustomerChart to ensure state updates first
+        
+            handleCustomerChart(success.email, success.id);
+        
     } else {
-      setErrorMessage("Inavlid username or password. Please try again");
+        setErrorMessage("Invalid username or password. Please try again");
     }
+
     setTimeout(() => {
-      setErrorMessage("");
+        setErrorMessage("");
     }, 5000);
-  };
+};
+
+const handleCustomerChart = async (email, customerId) => {
+    try {
+        const res = await findBookingRoomsByEmailAndCustomerId(email, customerId);
+
+        //update global state of cartItems
+        updateCart(res);
+    } catch (error) {
+        console.error("Error fetching booking rooms:", error.message);
+    }
+};
+
+
   return (
     <section className="container col-6 mt-5 mb-5">
       {errorMessage && <p className="alert alert-danger">{errorMessage}</p>}

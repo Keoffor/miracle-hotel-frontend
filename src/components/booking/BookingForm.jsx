@@ -18,6 +18,7 @@ const BookingForm = () => {
   const [booking, setBooking] = useState({
     guestFullName: "",
     guestEmail: currentUser,
+    customerId: "",
     checkInDate: "",
     checkOutDate: "",
     numOfAdults: "",
