@@ -71,4 +71,6 @@ Miracle Hotel backend Service is responsible for the CRUD operations and handlin
 
 1. Clone repo from `https://github.com/Keoffor/miracle-hotel-service.git`
 
-2. Open in IDE of your choice to launch the service in port 8080
+2. clone repo from `https://github.com/Keoffor/miracle-payment-service.git`
+
+3. Open in IDE of your choice to launch the service in port 8080
