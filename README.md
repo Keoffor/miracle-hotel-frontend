@@ -1,7 +1,7 @@
 
 # <center><img src="readme-pics/hotel.png" alt="logo image" /></center>
 
-This project was generated with [React + Vite](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) and [Spring Boot](https://start.spring.io) framework
+This project was built with [React + Vite](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) and [Spring Boot](https://start.spring.io) framework
 
 
 ## Description
