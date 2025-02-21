@@ -10,14 +10,19 @@ const BookingSummary = ({ booking, payment, isFormValid,roomId,roomType }) => {
   const noOfDays = checkOutDate.diff(checkInDate, "days");
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [customerId, setCustomerId]=useState("");
   const navigate = useNavigate();
  
   const[orderRequest, setOrderRequest] = useState(createInitialOrderRequest())
-    
-    useEffect(() => {
-    }, [orderRequest]);
+  const[isPaymentLoaded, setIsLoaded] = useState(0);
 
     
+    useEffect(() => {
+    }, [JSON.stringify(orderRequest)]);
+
+    useEffect(()=>{
+      setCustomerId(localStorage.getItem("customerId"))
+    })
 
   const handleConfirmCheckOut = () => {
     setIsProcessingPayment(true);
@@ -30,11 +35,13 @@ const BookingSummary = ({ booking, payment, isFormValid,roomId,roomType }) => {
 
 
   const handleCheckOut = async () => {
+    setIsLoaded(payment)
     setOrderRequest(prevState => {
       const updatedOrder = {
         ...prevState,
         guestFullName: booking.guestFullName,
         guestEmail: booking.guestEmail,
+        customerId: customerId,
         bookedRooms: [{
           roomId: roomId,
           roomType: roomType,
@@ -45,7 +52,8 @@ const BookingSummary = ({ booking, payment, isFormValid,roomId,roomType }) => {
       };
 
     setTimeout(() => {
-      navigate("/checkout", { state: { orderRequestData: updatedOrder, isclickedData: true } });
+      navigate("/checkout", { state: { orderRequestData: updatedOrder, isPaymentLoaded: isPaymentLoaded } });
+
     }, 100);  // Small delay for React state update
     
     return updatedOrder;

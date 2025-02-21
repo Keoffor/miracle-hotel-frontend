@@ -1,3 +1,4 @@
+
 body {
   min-height: 100vh;
   padding-bottom: 50px;
@@ -25,6 +26,7 @@ label.label-text{
   margin: 0;
   padding: 0;
   line-height: 1;    
+  box-sizing: border-box;
 }
 
 
@@ -36,12 +38,42 @@ label.label-text{
 
  }
  .navbar .navbar-nav .nav-link{
-  padding: 1em;
+  padding: 2em;
  }
  .navbar .navbar-nav .nav-item{
   position: relative;
  }
+ .nav-cart {
+  display: flex;
+  align-items: center;
+ }
+ .cart-quanity{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 23px;
+  width: 23px;
+  background: rgb(246, 5, 13);
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  position: absolute;
+  font-weight: 700;
+  margin-left: 17px;
+  top: 0;
 
+ }
+ .cart-icon {
+  fill: rgb(19, 14, 108); /* Change to any color */
+}
+.cart-i {
+  color: rgb(19, 14, 108)
+}
+
+.cart-amount {
+  color:hsl(0, 0%, 1%);
+  font-weight: bold;
+}
 
  .navbar .navbar-nav .nav-item::after{
   position: absolute;
@@ -252,3 +284,4 @@ label.label-text{
   height: 60px;
   text-align: center;
 }
+
