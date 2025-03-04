@@ -1,11 +1,16 @@
 import axios from "axios";
 
+// export const api = axios.create({
+//   baseURL: "http://miracle-main-svc:9192",
+// });
+const API_BASE_URL = "http://dev.kenstudy.com"; // Gateway API
+
 export const api = axios.create({
-  baseURL: "http://localhost:9192",
+  baseURL: `${API_BASE_URL}/`, // Calls miracle-main-svc
 });
 
 export const api2 = axios.create({
-  baseURL: "http://localhost:9193",
+  baseURL: `${API_BASE_URL}/payment`, // Calls miracle-payment-svc
   headers: {
     "Content-Type": "application/json",
   },
@@ -248,7 +253,7 @@ export async function findBookingRoomsByEmailAndCustomerId(email, customerId) {
 //This function allows customer to checkout for billing after booking a room
 export async function paymentCheckout(paymentRequest) {
   try {
-    const response = await api2.post("/payment/checkout", paymentRequest);
+    const response = await api2.post("/checkout", paymentRequest);
     return response.data;
   } catch (error) {
     return new Error(`Error creating billing session ${error.message}`);
